@@ -3,6 +3,8 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "SlateCatenary.h"
+#include "Catenary/SCatenary.h"
 #include "Components/Widget.h"
 #include "CatenaryWidget.generated.h"
 
@@ -24,4 +26,12 @@ protected:
 		return NSLOCTEXT("Monolith UI", "Monolith UI", "Monolith UI");
 	};
 #endif
+
+	TSharedPtr<SCatenary> SlateCatenary;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FSlateCatenary CatenaryData = FSlateCatenary();
+
+public:
+	FSlateCatenary GetCatenaryData() const { return  CatenaryData; }
 };

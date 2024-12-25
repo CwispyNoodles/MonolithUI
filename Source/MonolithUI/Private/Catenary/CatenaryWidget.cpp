@@ -5,10 +5,12 @@
 
 TSharedRef<SWidget> UCatenaryWidget::RebuildWidget()
 {
-	return Super::RebuildWidget();
+	SlateCatenary = SNew(SCatenary).Catenary_UObject(this, &ThisClass::GetCatenaryData);
+	return SlateCatenary.ToSharedRef();
 }
 
 void UCatenaryWidget::ReleaseSlateResources(bool bReleaseChildren)
 {
 	Super::ReleaseSlateResources(bReleaseChildren);
+	SlateCatenary.Reset();
 }
