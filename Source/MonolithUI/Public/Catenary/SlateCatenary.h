@@ -13,6 +13,21 @@ enum class ECatenaryConnectionSchema : uint8
 };
 
 USTRUCT(BlueprintType)
+struct MONOLITHUI_API FCatenaryConnectionSchema
+{
+	GENERATED_BODY()
+	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, DisplayName="Schema Type")
+	ECatenaryConnectionSchema PointConnectionSchema = ECatenaryConnectionSchema::Open;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(EditCondition="PointConnectionSchema==ECatenaryConnectionSchema::Open", EditConditionHides))
+	FVector2D Point = FVector2D::ZeroVector;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(EditCondition="PointConnectionSchema==ECatenaryConnectionSchema::WidgetAttached", EditConditionHides))
+	FName PointWidgetName = NAME_None;
+};
+
+USTRUCT(BlueprintType)
 struct MONOLITHUI_API FCatenaryArguments
 {
 	GENERATED_BODY()
@@ -22,23 +37,11 @@ struct MONOLITHUI_API FCatenaryArguments
 		Brush.SetImageSize(FVector2D::Unit45Deg);
 	}
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, DisplayName="P1 Connection Schema")
-	ECatenaryConnectionSchema P1ConnectionSchema = ECatenaryConnectionSchema::Open;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, DisplayName="Point 1 Connection Schema")
+	FCatenaryConnectionSchema P1ConnectionSchema;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(EditCondition="P1ConnectionSchema==ECatenaryConnectionSchema::Open", EditConditionHides))
-	FVector2D P1 = FVector2D::ZeroVector;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(EditCondition="P1ConnectionSchema==ECatenaryConnectionSchema::WidgetAttached", EditConditionHides))
-	FName P1WidgetName = NAME_None;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, DisplayName="P2 Connection Schema")
-	ECatenaryConnectionSchema P2ConnectionSchema = ECatenaryConnectionSchema::Open;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(EditCondition="P2ConnectionSchema==ECatenaryConnectionSchema::Open", EditConditionHides))
-	FVector2D P2 = FVector2D::ZeroVector;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(EditCondition="P2ConnectionSchema==ECatenaryConnectionSchema::WidgetAttached", EditConditionHides))
-	FName P2WidgetName = NAME_None;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, DisplayName="Point 2 Connection Schema")
+	FCatenaryConnectionSchema P2ConnectionSchema;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	float Length = 500.0f;
@@ -46,16 +49,16 @@ struct MONOLITHUI_API FCatenaryArguments
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	int Iterations = 6;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta=(ClampMin=1))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(ClampMin=1))
 	int Segments = 10;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta=(ClampMin=0.01f))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(ClampMin=0.01f))
 	float IntervalStep = 5.0f;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta=(ClampMin=0.0001f))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(ClampMin=0.0001f))
 	float Precision = 0.0001f;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	FSlateBrush Brush = FSlateBrush();
 };
 

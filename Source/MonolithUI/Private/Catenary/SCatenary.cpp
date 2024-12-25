@@ -17,5 +17,11 @@ int32 SCatenary::OnPaint(const FPaintArgs& Args, const FGeometry& AllottedGeomet
 	FSlateWindowElementList& OutDrawElements, int32 LayerId, const FWidgetStyle& InWidgetStyle,
 	bool bParentEnabled) const
 {
+	const FSlateCatenary& CatenaryRef = Catenary.Get();
+
+	// const FMySlatePaintContextTest PaintContext(OutDrawElements, AllottedGeometry, LayerId + 1,
+	// 	ShouldBeEnabled(bParentEnabled) ? ESlateDrawEffect::None : ESlateDrawEffect::DisabledEffect,
+	// 	CatenaryRef.Brush.TintColor.GetColor(InWidgetStyle).ToFColorSRGB());
+
 	return LayerId;
 }
