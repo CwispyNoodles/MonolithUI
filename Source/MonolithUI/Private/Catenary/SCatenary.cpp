@@ -3,6 +3,8 @@
 
 #include "Catenary/SCatenary.h"
 
+#include "CatenaryBuilder.h"
+
 void SCatenary::Construct(const FArguments& InArguments)
 {
 	Catenary = InArguments._Catenary;
@@ -19,9 +21,45 @@ int32 SCatenary::OnPaint(const FPaintArgs& Args, const FGeometry& AllottedGeomet
 {
 	const FSlateCatenary& CatenaryRef = Catenary.Get();
 
-	// const FMySlatePaintContextTest PaintContext(OutDrawElements, AllottedGeometry, LayerId + 1,
-	// 	ShouldBeEnabled(bParentEnabled) ? ESlateDrawEffect::None : ESlateDrawEffect::DisabledEffect,
-	// 	CatenaryRef.Brush.TintColor.GetColor(InWidgetStyle).ToFColorSRGB());
+	const int PaintLayerId = LayerId + 1;
 
-	return LayerId;
+	for (auto& CatenaryArg : CatenaryRef.Catenaries)
+	{
+		const FSlateCatenaryPaintContext PaintContext(OutDrawElements, AllottedGeometry, PaintLayerId,
+		ShouldBeEnabled(bParentEnabled) ? ESlateDrawEffect::None : ESlateDrawEffect::DisabledEffect,
+		CatenaryArg.Brush.TintColor.GetColor(InWidgetStyle).ToFColorSRGB());
+
+		PaintCatenaryBrush(PaintContext, CatenaryArg);
+
+		// if (CatenaryArg.Brush.GetResourceObject()->IsValidLowLevel())
+		// {
+		// 	PaintCatenaryBrush(PaintContext, CatenaryArg);
+		// }
+		// else
+		// {
+		// 	PaintCatenarySimple(PaintContext, CatenaryArg);
+		// }
+	}
+	
+	return PaintLayerId;
+}
+
+void SCatenary::PaintCatenarySimple(const FSlateCatenaryPaintContext& InPaintContext, const FCatenaryArguments& InCatenaryArguments) const
+{
+	FCatenaryBuilder CatenaryBuilder(InCatenaryArguments.Brush.GetImageSize(), InPaintContext);
+
+	CatenaryBuilder.BuildCatenaryPoints(InCatenaryArguments);
+
+	FSlateDrawElement::MakeLines(InPaintContext.OutDrawElements, InPaintContext.LayerId, InPaintContext.AllotedGeometry.ToPaintGeometry(), CatenaryBuilder.CatenaryPoints, InPaintContext.DrawEffect, InPaintContext.TintColor, true, CatenaryBuilder.HalfLineThickness);
+}
+
+void SCatenary::PaintCatenaryBrush(const FSlateCatenaryPaintContext& InPaintContext, const FCatenaryArguments& InCatenaryArguments) const
+{
+	FCatenaryBuilder CatenaryBuilder(InCatenaryArguments.Brush.GetImageSize(), InPaintContext);
+	
+	CatenaryBuilder.BuildCatenaryGeometry(InCatenaryArguments);
+
+	const FSlateResourceHandle& RenderResourceHandle = FSlateApplication::Get().GetRenderer()->GetResourceHandle(InCatenaryArguments.Brush);
+	FSlateDrawElement::MakeCustomVerts(InPaintContext.OutDrawElements, InPaintContext.LayerId, RenderResourceHandle, CatenaryBuilder.Vertices, CatenaryBuilder.Indices, nullptr, 0, 0, InPaintContext.DrawEffect);
+	
 }
