@@ -22,7 +22,8 @@ public:
 	virtual int32 OnPaint(const FPaintArgs& Args, const FGeometry& AllottedGeometry, const FSlateRect& MyCullingRect, FSlateWindowElementList& OutDrawElements, int32 LayerId, const FWidgetStyle& InWidgetStyle, bool bParentEnabled) const override;
 
 private:
-	virtual void PaintCatenary(const FSlateCatenaryPaintContext& InPaintContext, const FCatenaryArguments& InCatenaryArguments) const;
+	virtual void PaintCatenarySimple(const FSlateCatenaryPaintContext& InPaintContext, const FCatenaryArguments& InCatenaryArguments) const;
+	virtual void PaintCatenaryBrush(const FSlateCatenaryPaintContext& InPaintContext, const FCatenaryArguments& InCatenaryArguments) const;
 	
 protected:
 

@@ -5,10 +5,8 @@
 #include "SlateCatenary.generated.h"
 
 
-class UWidgetTree;
-
 UENUM(BlueprintType)
-enum class ECatenaryConnectionRule : uint8
+enum class ECatenaryConnectionSchema : uint8
 {
 	Open,
 	WidgetAttached
@@ -20,15 +18,12 @@ struct MONOLITHUI_API FCatenaryConnectionSchema
 	GENERATED_BODY()
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, DisplayName="Schema Type")
-	ECatenaryConnectionRule PointConnectionSchema = ECatenaryConnectionRule::Open;
+	ECatenaryConnectionSchema PointConnectionSchema = ECatenaryConnectionSchema::Open;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(EditCondition="PointConnectionSchema==ECatenaryConnectionRule::Open", EditConditionHides))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(EditCondition="PointConnectionSchema==ECatenaryConnectionSchema::Open", EditConditionHides))
 	FVector2D Point = FVector2D::ZeroVector;
 
-	UPROPERTY()
-	FVector2D DesiredPoint = Point;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(EditCondition="PointConnectionSchema==ECatenaryConnectionRule::WidgetAttached", EditConditionHides))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(EditCondition="PointConnectionSchema==ECatenaryConnectionSchema::WidgetAttached", EditConditionHides))
 	FName PointWidgetName = NAME_None;
 };
 
@@ -75,19 +70,6 @@ struct MONOLITHUI_API FSlateCatenary
 {
 	GENERATED_BODY()
 
-	FSlateCatenary()
-	{}
-
-	// TODO: make them references instead
-	FSlateCatenary(TArray<FCatenaryArguments> InCatenaries)
-		: Catenaries(InCatenaries)
-	{
-		
-	}
-
-	UPROPERTY()
-	TArray<FCatenaryArguments> Catenaries = TArray<FCatenaryArguments>();
-
-	UPROPERTY()
-	UWidgetTree* WidgetTree = nullptr; 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	TArray<FCatenaryArguments> Catenaries;
 };
