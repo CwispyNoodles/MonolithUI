@@ -29,31 +29,14 @@ int32 SCatenary::OnPaint(const FPaintArgs& Args, const FGeometry& AllottedGeomet
 		ShouldBeEnabled(bParentEnabled) ? ESlateDrawEffect::None : ESlateDrawEffect::DisabledEffect,
 		CatenaryArg.Brush.TintColor.GetColor(InWidgetStyle).ToFColorSRGB());
 
-		PaintCatenaryBrush(PaintContext, CatenaryArg);
-
-		// if (CatenaryArg.Brush.GetResourceObject()->IsValidLowLevel())
-		// {
-		// 	PaintCatenaryBrush(PaintContext, CatenaryArg);
-		// }
-		// else
-		// {
-		// 	PaintCatenarySimple(PaintContext, CatenaryArg);
-		// }
+		PaintCatenary(PaintContext, CatenaryArg);
 	}
 	
 	return PaintLayerId;
 }
 
-void SCatenary::PaintCatenarySimple(const FSlateCatenaryPaintContext& InPaintContext, const FCatenaryArguments& InCatenaryArguments) const
-{
-	FCatenaryBuilder CatenaryBuilder(InCatenaryArguments.Brush.GetImageSize(), InPaintContext);
 
-	CatenaryBuilder.BuildCatenaryPoints(InCatenaryArguments);
-
-	FSlateDrawElement::MakeLines(InPaintContext.OutDrawElements, InPaintContext.LayerId, InPaintContext.AllotedGeometry.ToPaintGeometry(), CatenaryBuilder.CatenaryPoints, InPaintContext.DrawEffect, InPaintContext.TintColor, true, CatenaryBuilder.HalfLineThickness);
-}
-
-void SCatenary::PaintCatenaryBrush(const FSlateCatenaryPaintContext& InPaintContext, const FCatenaryArguments& InCatenaryArguments) const
+void SCatenary::PaintCatenary(const FSlateCatenaryPaintContext& InPaintContext, const FCatenaryArguments& InCatenaryArguments) const
 {
 	FCatenaryBuilder CatenaryBuilder(InCatenaryArguments.Brush.GetImageSize(), InPaintContext);
 	
