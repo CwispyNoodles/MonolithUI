@@ -3,6 +3,8 @@
 
 #include "Catenary/CatenaryWidget.h"
 
+#include "Blueprint/WidgetTree.h"
+
 TSharedRef<SWidget> UCatenaryWidget::RebuildWidget()
 {
 	SlateCatenary = SNew(SCatenary).Catenary_UObject(this, &ThisClass::GetCatenaryData);
@@ -13,4 +15,9 @@ void UCatenaryWidget::ReleaseSlateResources(bool bReleaseChildren)
 {
 	Super::ReleaseSlateResources(bReleaseChildren);
 	SlateCatenary.Reset();
+}
+
+FSlateCatenary UCatenaryWidget::GetCatenaryData() const
+{
+	return FSlateCatenary(Catenaries, Cast<UWidgetTree>(GetOuter()));
 }

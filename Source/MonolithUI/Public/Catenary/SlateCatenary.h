@@ -5,6 +5,8 @@
 #include "SlateCatenary.generated.h"
 
 
+class UWidgetTree;
+
 UENUM(BlueprintType)
 enum class ECatenaryConnectionSchema : uint8
 {
@@ -70,6 +72,28 @@ struct MONOLITHUI_API FSlateCatenary
 {
 	GENERATED_BODY()
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	TArray<FCatenaryArguments> Catenaries;
+	FSlateCatenary()
+	{
+	}
+
+	FSlateCatenary(TArray<FCatenaryArguments> InCatenaries, UWidgetTree* InWidgetTree)
+		: Catenaries(InCatenaries), WidgetTree(InWidgetTree)
+	{}
+
+	bool GetWidgetTree(UWidgetTree*& InWidgetTree) const
+	{
+		if (WidgetTree)
+		{
+			InWidgetTree = WidgetTree;
+			return true;
+		}
+		return false;
+	}
+
+	UPROPERTY()
+	TArray<FCatenaryArguments> Catenaries = TArray<FCatenaryArguments>();
+
+private:
+	UPROPERTY()
+	UWidgetTree* WidgetTree = nullptr;
 };

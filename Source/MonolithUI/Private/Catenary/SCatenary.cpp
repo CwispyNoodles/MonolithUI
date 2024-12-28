@@ -8,6 +8,14 @@
 void SCatenary::Construct(const FArguments& InArguments)
 {
 	Catenary = InArguments._Catenary;
+
+	const FSlateCatenary& CatenaryRef = Catenary.Get();
+
+	UWidgetTree* Test;
+	if (CatenaryRef.GetWidgetTree(Test))
+	{
+		UE_LOG(LogTemp, Warning, TEXT("WidgetTree Found"))
+	}
 }
 
 FVector2D SCatenary::ComputeDesiredSize(float LayoutScaleMultiplier) const

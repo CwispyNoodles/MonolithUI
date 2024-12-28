@@ -29,9 +29,9 @@ protected:
 
 	TSharedPtr<SCatenary> SlateCatenary;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	FSlateCatenary CatenaryData = FSlateCatenary();
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	TArray<FCatenaryArguments> Catenaries;
 
 public:
-	FSlateCatenary GetCatenaryData() const { return  CatenaryData; }
+	FSlateCatenary GetCatenaryData() const;
 };
