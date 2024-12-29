@@ -8,24 +8,30 @@
 class UWidgetTree;
 
 UENUM(BlueprintType)
-enum class ECatenaryConnectionSchema : uint8
+enum class ECatenaryConnectionRule : uint8
 {
 	Open,
-	WidgetAttached
+	Widget,
+	// Cursor
 };
 
 USTRUCT(BlueprintType)
 struct MONOLITHUI_API FCatenaryConnectionSchema
 {
 	GENERATED_BODY()
+
+	bool operator==(const FCatenaryConnectionSchema& Other) const
+	{
+		return Point == Other.Point;
+	}
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, DisplayName="Schema Type")
-	ECatenaryConnectionSchema PointConnectionSchema = ECatenaryConnectionSchema::Open;
+	ECatenaryConnectionRule PointConnectionRule = ECatenaryConnectionRule::Open;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(EditCondition="PointConnectionSchema==ECatenaryConnectionSchema::Open", EditConditionHides))
-	FVector2D Point = FVector2D::ZeroVector;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(EditCondition="PointConnectionRule==ECatenaryConnectionSchema::Open", EditConditionHides))
+	mutable FVector2D Point = FVector2D::ZeroVector;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(EditCondition="PointConnectionSchema==ECatenaryConnectionSchema::WidgetAttached", EditConditionHides))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(EditCondition="PointConnectionRule==ECatenaryConnectionSchema::WidgetAttached", EditConditionHides))
 	FName PointWidgetName = NAME_None;
 };
 
@@ -37,6 +43,14 @@ struct MONOLITHUI_API FCatenaryArguments
 	FCatenaryArguments()
 	{
 		Brush.SetImageSize(FVector2D::Unit45Deg);
+	}
+
+	bool operator==(const FCatenaryArguments& Other) const
+	{
+		return P1ConnectionSchema == Other.P1ConnectionSchema && P2ConnectionSchema == Other.P2ConnectionSchema
+		&& Length == Other.Length
+		&& Segments == Other.Segments
+		&& Brush == Other.Brush;
 	}
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, DisplayName="Point 1 Connection Schema")
@@ -97,3 +111,13 @@ private:
 	UPROPERTY()
 	UWidgetTree* WidgetTree = nullptr;
 };
+
+#if UE_BUILD_DEBUG
+uint32 GetTypeHash(const FCatenaryArguments& Thing);
+#else // optimize by inlining in shipping and development builds
+FORCEINLINE uint32 GetTypeHash(const FCatenaryArguments& Thing)
+{
+	uint32 Hash = FCrc::MemCrc32(&Thing, sizeof(FCatenaryArguments));
+	return Hash;
+}
+#endif

@@ -10,13 +10,13 @@ struct MONOLITHUI_API FCatenaryBuilder
 {
 	FCatenaryBuilder(const FVector2D& InSize, const FSlateCatenaryPaintContext& PaintContext);
 	
-	void BuildCatenaryPoints(FCatenaryArguments InArgs);
+	void BuildCatenaryPoints(FCatenaryArguments InArgs, TArray<FVector2D>& InCatenaryPoints);
 
-	void BuildCatenaryGeometry(FCatenaryArguments InArgs);
+	void BuildCatenaryGeometry(TArray<FVector2D> InPoints);
 
 	TArray<FSlateVertex> Vertices;
 	TArray<SlateIndex> Indices;
-	TArray<FVector2D> CatenaryPoints;
+	// TArray<FVector2D> CatenaryPoints;
 	float HalfLineThickness;
 
 private:

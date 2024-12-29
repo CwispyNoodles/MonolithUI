@@ -22,9 +22,10 @@ public:
 	virtual int32 OnPaint(const FPaintArgs& Args, const FGeometry& AllottedGeometry, const FSlateRect& MyCullingRect, FSlateWindowElementList& OutDrawElements, int32 LayerId, const FWidgetStyle& InWidgetStyle, bool bParentEnabled) const override;
 
 private:
-	virtual void PaintCatenary(const FSlateCatenaryPaintContext& InPaintContext, const FCatenaryArguments& InCatenaryArguments) const;
-	
+	virtual void PaintCatenary(const FSlateCatenaryPaintContext& InPaintContext, const FCatenaryArguments& InCatenaryArguments, const bool& bIsDirty) const;
+	FVector2D GetDesiredLocation(const FCatenaryConnectionSchema& InSchema) const;
 protected:
-
+	mutable TMap<FCatenaryArguments, TArray<FVector2D>> Catenaries;
+	
 	TAttribute<FSlateCatenary> Catenary;
 };

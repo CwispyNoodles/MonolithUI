@@ -13,8 +13,9 @@ FCatenaryBuilder::FCatenaryBuilder(const FVector2D& InSize, const FSlateCatenary
 	HalfLineThickness = LineThickness / 2 + TextureCoord2.Y;
 }
 
-void FCatenaryBuilder::BuildCatenaryPoints(FCatenaryArguments InArgs)
+void FCatenaryBuilder::BuildCatenaryPoints(FCatenaryArguments InArgs, TArray<FVector2D>& InCatenaryPoints)
 {
+	// UE_LOG(LogTemp, Warning, TEXT("Building Catenary Points"))
 	const FVector2D InStart = InArgs.P1ConnectionSchema.Point;
 	const FVector2D InEnd = InArgs.P2ConnectionSchema.Point;
 	const int Segments = InArgs.Segments;
@@ -26,13 +27,13 @@ void FCatenaryBuilder::BuildCatenaryPoints(FCatenaryArguments InArgs)
 	FVector2D P2 = bIsFlipped ? InStart : InEnd;
 	const FVector2D Diff = P2 - P1;
 	    
-	CatenaryPoints.Empty();
+	InCatenaryPoints.Empty();
 	
 	// Fully Taut
 	if (Segments == 1 || Diff.Length() > L)
 	{
-		CatenaryPoints.Add(InEnd);
-		CatenaryPoints.Add(InStart);
+		InCatenaryPoints.Add(InEnd);
+		InCatenaryPoints.Add(InStart);
 		return;
 	}
 
@@ -95,18 +96,16 @@ void FCatenaryBuilder::BuildCatenaryPoints(FCatenaryArguments InArgs)
 		FVector2D Point(X,Y);
 
 		// Note: I subtracted Point from End due to how the Unreal coordinate system is set up.
-		CatenaryPoints.Add(P2 - Point);
+		InCatenaryPoints.Add(P2 - Point);
 	}
 
-	CatenaryPoints.Insert(P2, 0);
-	CatenaryPoints.Add(P1);
+	InCatenaryPoints.Insert(P2, 0);
+	InCatenaryPoints.Add(P1);
 }
 
-void FCatenaryBuilder::BuildCatenaryGeometry(FCatenaryArguments InArgs)
+void FCatenaryBuilder::BuildCatenaryGeometry(TArray<FVector2D> InPoints)
 {
-	BuildCatenaryPoints(InArgs);
-
-	for (auto Point : CatenaryPoints)
+	for (auto Point : InPoints)
 	{
 		AppendPoint(Point);
 	}
