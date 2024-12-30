@@ -10,7 +10,7 @@ struct MONOLITHUI_API FCatenaryBuilder
 {
 	FCatenaryBuilder(const FVector2D& InSize, const FSlateCatenaryPaintContext& PaintContext);
 	
-	void BuildCatenaryPoints(FCatenaryArguments InArgs, TArray<FVector2D>& InCatenaryPoints);
+	static void BuildCatenaryPoints(FCatenaryArguments InArgs, TArray<FVector2D>& InCatenaryPoints);
 
 	void BuildCatenaryGeometry(TArray<FVector2D> InPoints);
 

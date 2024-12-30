@@ -28,10 +28,10 @@ struct MONOLITHUI_API FCatenaryConnectionSchema
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, DisplayName="Schema Type")
 	ECatenaryConnectionRule PointConnectionRule = ECatenaryConnectionRule::Open;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(EditCondition="PointConnectionRule==ECatenaryConnectionSchema::Open", EditConditionHides))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(EditCondition="PointConnectionRule==ECatenaryConnectionRule::Open", EditConditionHides))
 	mutable FVector2D Point = FVector2D::ZeroVector;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(EditCondition="PointConnectionRule==ECatenaryConnectionSchema::WidgetAttached", EditConditionHides))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(EditCondition="PointConnectionRule==ECatenaryConnectionRule::Widget", EditConditionHides))
 	FName PointWidgetName = NAME_None;
 };
 
@@ -76,6 +76,9 @@ struct MONOLITHUI_API FCatenaryArguments
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	FSlateBrush Brush = FSlateBrush();
+
+	UPROPERTY()
+	TArray<FVector2D> CatenaryPoints;
 };
 
 /**

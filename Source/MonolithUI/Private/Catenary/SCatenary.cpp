@@ -13,10 +13,15 @@ void SCatenary::Construct(const FArguments& InArguments)
 {
 	Catenary = InArguments._Catenary;
 
-	// UWidgetTree* Test;
-	// if (CatenaryRef.GetWidgetTree(Test))
+	// const FSlateCatenary& CatenaryRef = Catenary.Get();
+	// CatenaryArguments_Copy = CatenaryRef.Catenaries;
+	// // TODO: Initialize CatenaryPoints
+	// for (auto& Arg : CatenaryArguments_Copy)
 	// {
-	// 	UE_LOG(LogTemp, Warning, TEXT("WidgetTree Found"))
+	// 	TArray<FVector2D> CatenaryPoints;
+	// 	FCatenaryBuilder::BuildCatenaryPoints(Arg, CatenaryPoints);
+	//
+	// 	CatenaryPointMap.Add(Arg, CatenaryPoints);
 	// }
 }
 
@@ -29,59 +34,82 @@ int32 SCatenary::OnPaint(const FPaintArgs& Args, const FGeometry& AllottedGeomet
 	FSlateWindowElementList& OutDrawElements, int32 LayerId, const FWidgetStyle& InWidgetStyle,
 	bool bParentEnabled) const
 {
-	const FSlateCatenary& CatenaryRef = Catenary.Get();
-
 	const int PaintLayerId = LayerId + 1;
 
-	for (auto& CatenaryArg : CatenaryRef.Catenaries)
+	const FSlateCatenary& CatenaryRef = Catenary.Get();
+	
+	for (auto& Arg : CatenaryRef.Catenaries)
 	{
-		// Check if a particular Catenary needs to be updated
-		
-		FVector2D DesiredP1 = GetDesiredLocation(CatenaryArg.P1ConnectionSchema);
-		FVector2D DesiredP2 = GetDesiredLocation(CatenaryArg.P2ConnectionSchema);
-
-		// Points are dirty if their current position does not match with their desired location.
-		// UE_LOG(LogTemp, Warning, TEXT("DesiredP1: %s | CurrentP1: %s | DesiredP2: %s | CurrentP2: %s"), *DesiredP1.ToString(), *CatenaryArg.P1ConnectionSchema.Point.ToString(), *DesiredP2.ToString(), *CatenaryArg.P2ConnectionSchema.Point.ToString())
-		bool bIsDirty = !DesiredP1.Equals(CatenaryArg.P1ConnectionSchema.Point) || !DesiredP2.Equals(CatenaryArg.P2ConnectionSchema.Point);
-
-		if (bIsDirty)
-		{
-			// If points are dirty, update location.
-			CatenaryArg.P1ConnectionSchema.Point = DesiredP1;
-			CatenaryArg.P2ConnectionSchema.Point = DesiredP2;
-		}
-		
 		const FSlateCatenaryPaintContext PaintContext(OutDrawElements, AllottedGeometry, PaintLayerId,
 		ShouldBeEnabled(bParentEnabled) ? ESlateDrawEffect::None : ESlateDrawEffect::DisabledEffect,
-		CatenaryArg.Brush.TintColor.GetColor(InWidgetStyle).ToFColorSRGB());
+		Arg.Brush.TintColor.GetColor(InWidgetStyle).ToFColorSRGB());
 
-		PaintCatenary(PaintContext, CatenaryArg, bIsDirty);
+		FCatenaryBuilder CatenaryBuilder(Arg.Brush.GetImageSize(), PaintContext);
+
+		CatenaryBuilder.BuildCatenaryGeometry(Arg.CatenaryPoints);
+
+		const FSlateResourceHandle& RenderResourceHandle = FSlateApplication::Get().GetRenderer()->GetResourceHandle(Arg.Brush);
+		FSlateDrawElement::MakeCustomVerts(PaintContext.OutDrawElements, PaintContext.LayerId, RenderResourceHandle, CatenaryBuilder.Vertices, CatenaryBuilder.Indices, nullptr, 0, 0, PaintContext.DrawEffect);
+	
+
+		// PaintCatenary(PaintContext, CatenaryArg, bIsDirty);
 	}
 	
 	return PaintLayerId;
 }
 
+void SCatenary::Tick(const FGeometry& AllottedGeometry, const double InCurrentTime, const float InDeltaTime)
+{
+	SLeafWidget::Tick(AllottedGeometry, InCurrentTime, InDeltaTime);
+
+	// const FSlateCatenary& CatenaryRef = Catenary.
+	//
+	// for (int i = 0; i < CatenaryRef.Catenaries.Num(); i++)
+	// {
+	// 	CatenaryRef.Catenaries[i].P1ConnectionSchema.Point = FVector2D(0.0f);
+	// }
+
+	// for (auto& Arg : CatenaryArguments_Copy)
+	// {
+	// 	FVector2D DesiredP1 = GetDesiredLocation(Arg.P1ConnectionSchema);
+	// 	FVector2D DesiredP2 = GetDesiredLocation(Arg.P2ConnectionSchema);
+	//
+	// 	// Determine if point is dirty
+	// 	if (!DesiredP1.Equals(Arg.P1ConnectionSchema.Point) || !DesiredP2.Equals(Arg.P2ConnectionSchema.Point))
+	// 	{
+	// 		CatenaryPointMap.Remove(Arg);
+	// 		Arg.P1ConnectionSchema.Point = DesiredP1;
+	// 		Arg.P2ConnectionSchema.Point = DesiredP2;
+	//
+	// 		TArray<FVector2D> CatenaryPoints;
+	// 		FCatenaryBuilder::BuildCatenaryPoints(Arg, CatenaryPoints);
+	//
+	// 		CatenaryPointMap.Add(Arg, CatenaryPoints);
+	// 	}
+	// }
+}
+
 
 void SCatenary::PaintCatenary(const FSlateCatenaryPaintContext& InPaintContext, const FCatenaryArguments& InCatenaryArguments, const bool& bIsDirty) const
 {
-	FCatenaryBuilder CatenaryBuilder(InCatenaryArguments.Brush.GetImageSize(), InPaintContext);
-
-	// if the catenary is dirty, recalculate the Catenary points
-	if (!Catenaries.Contains(InCatenaryArguments) || bIsDirty)
-	{
-		TArray<FVector2D> CatenaryPoints;
-		CatenaryBuilder.BuildCatenaryPoints(InCatenaryArguments, CatenaryPoints);
-		Catenaries.Add(InCatenaryArguments, CatenaryPoints);
-		CatenaryBuilder.BuildCatenaryGeometry(CatenaryPoints);
-	}
-	else
-	{
-		CatenaryBuilder.BuildCatenaryGeometry(Catenaries.FindRef(InCatenaryArguments));
-	}
-
-	const FSlateResourceHandle& RenderResourceHandle = FSlateApplication::Get().GetRenderer()->GetResourceHandle(InCatenaryArguments.Brush);
-	FSlateDrawElement::MakeCustomVerts(InPaintContext.OutDrawElements, InPaintContext.LayerId, RenderResourceHandle, CatenaryBuilder.Vertices, CatenaryBuilder.Indices, nullptr, 0, 0, InPaintContext.DrawEffect);
-	
+	// FCatenaryBuilder CatenaryBuilder(InCatenaryArguments.Brush.GetImageSize(), InPaintContext);
+	//
+	// // if the catenary is dirty, recalculate the Catenary points
+	// if (!Catenaries.Contains(InCatenaryArguments) || bIsDirty)
+	// {
+	// 	TArray<FVector2D> CatenaryPoints;
+	// 	CatenaryBuilder.BuildCatenaryPoints(InCatenaryArguments, CatenaryPoints);
+	// 	Catenaries.Add(InCatenaryArguments, CatenaryPoints);
+	// 	CatenaryBuilder.BuildCatenaryGeometry(CatenaryPoints);
+	// }
+	// else
+	// {
+	// 	CatenaryBuilder.BuildCatenaryGeometry(Catenaries.FindRef(InCatenaryArguments));
+	// }
+	//
+	// const FSlateResourceHandle& RenderResourceHandle = FSlateApplication::Get().GetRenderer()->GetResourceHandle(InCatenaryArguments.Brush);
+	// FSlateDrawElement::MakeCustomVerts(InPaintContext.OutDrawElements, InPaintContext.LayerId, RenderResourceHandle, CatenaryBuilder.Vertices, CatenaryBuilder.Indices, nullptr, 0, 0, InPaintContext.DrawEffect);
+	//
 }
 
 FVector2D SCatenary::GetDesiredLocation(const FCatenaryConnectionSchema& InSchema) const
