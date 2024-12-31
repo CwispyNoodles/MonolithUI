@@ -52,7 +52,6 @@ void UCatenaryWidget::PostEditChangeChainProperty(FPropertyChangedChainEvent& Pr
 		const int32 ArrayIndex = PropertyChangedEvent.GetArrayIndex(MemberPropertyName);
 		if (Catenaries.IsValidIndex(ArrayIndex))
 		{
-			UE_LOG(LogTemp, Warning, TEXT("Catenary %s is now dirty"), *FString::FromInt(ArrayIndex))
 			Catenaries[ArrayIndex].bIsDirty = true;
 		}
 		
@@ -82,7 +81,6 @@ void UCatenaryWidget::Tick(float DeltaTime)
 		// We want to update if there are any differences such as length and segments.
 		if (Arg.bIsDirty || !DesiredP1.Equals(Arg.P1ConnectionSchema.Point) || !DesiredP2.Equals(Arg.P2ConnectionSchema.Point))
 		{
-			UE_LOG(LogTemp, Warning, TEXT("Updating Catenary %s"), *FString::FromInt(i))
 			Catenaries[i].P1ConnectionSchema.Point = DesiredP1;
 			Catenaries[i].P2ConnectionSchema.Point = DesiredP2;
 			
