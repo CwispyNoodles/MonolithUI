@@ -63,7 +63,7 @@ struct MONOLITHUI_API FCatenaryArguments
 	float Length = 500.0f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	int Iterations = 6;
+	int Iterations = 15;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(ClampMin=1))
 	int Segments = 10;
