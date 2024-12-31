@@ -52,6 +52,13 @@ public:
 		return true;
 	}
 
+#if WITH_EDITOR
+	virtual bool IsTickable() const override
+	{
+		return IsDesignTime() || (IsValid(GetWorld()) && (GetWorld()->WorldType == EWorldType::PIE || GetWorld()->WorldType == EWorldType::GamePreview || GetWorld()->WorldType == EWorldType::Game));
+	}
+#endif
+
 	
 	// FTickableGameObject End
 

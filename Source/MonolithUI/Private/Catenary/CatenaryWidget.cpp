@@ -7,6 +7,7 @@
 #include "Blueprint/WidgetLayoutLibrary.h"
 #include "Blueprint/WidgetTree.h"
 #include "Components/CanvasPanelSlot.h"
+#include "Kismet/KismetStringLibrary.h"
 
 TSharedRef<SWidget> UCatenaryWidget::RebuildWidget()
 {
@@ -70,10 +71,6 @@ void UCatenaryWidget::Tick(float DeltaTime)
 	{
 		return;
 	}
-
-// #if WITH_EDITOR
-// 	GEditor->
-// #endif
 
 	for (int i = 0; i < Catenaries.Num(); i++)
 	{
