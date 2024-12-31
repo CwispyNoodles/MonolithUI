@@ -20,7 +20,7 @@ protected:
 	virtual TSharedRef<SWidget> RebuildWidget() override;
 	virtual void OnWidgetRebuilt() override;
 	virtual void ReleaseSlateResources(bool bReleaseChildren) override;
-	virtual void PostEditChangeChainProperty(FPropertyChangedChainEvent& PropertyChangedEvent) override;
+	virtual void PostEditChangeChainProperty(FPropertyChangedChainEvent& PropertyChangedEvent);
 	
 #if WITH_EDITOR
 	virtual const FText GetPaletteCategory() override
