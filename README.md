@@ -29,6 +29,7 @@ Then, can instantiate and set various properties of each Catenary in the details
 ![image](https://github.com/user-attachments/assets/df332408-d106-4284-ab51-5ca3b46ff44e)
 
 In the Point Connection Schema, you can define whether or not one point of the Catenary is static (Schema Type 'Open') or follows a widget as shown in the video (Schema Type 'Widget') so long as you provide a valid name of the widget to follow.
+
 ![image](https://github.com/user-attachments/assets/6a155088-2529-458e-9de2-89e7c8eaee4c)
 
 
