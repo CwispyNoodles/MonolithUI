@@ -38,6 +38,7 @@ public:
 	FSlateCatenary GetCatenaryData() const;
 
 public:
+	// FTickableGameObject
 	virtual void Tick(float DeltaTime) override;
 	virtual TStatId GetStatId() const override
 	{
@@ -58,12 +59,15 @@ public:
 		return IsDesignTime() || (IsValid(GetWorld()) && (GetWorld()->WorldType == EWorldType::PIE || GetWorld()->WorldType == EWorldType::GamePreview || GetWorld()->WorldType == EWorldType::Game));
 	}
 #endif
-
-	
 	// FTickableGameObject End
 
 
 private:
+	/*
+	 * TODO: This is currently reliant on attached widgets being children of a Canvas Panel.
+	 * Change it so that CatenaryWidget accepts children so that we can extract locational
+	 * data directly.
+	 **/
 	FVector2D GetDesiredLocation(const FCatenaryConnectionSchema& InSchema) const;
 	
 	// The last frame number we were ticked.

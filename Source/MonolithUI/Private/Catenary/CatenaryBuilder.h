@@ -16,7 +16,6 @@ struct MONOLITHUI_API FCatenaryBuilder
 
 	TArray<FSlateVertex> Vertices;
 	TArray<SlateIndex> Indices;
-	// TArray<FVector2D> CatenaryPoints;
 	float HalfLineThickness;
 
 private:

@@ -15,6 +15,7 @@ FCatenaryBuilder::FCatenaryBuilder(const FVector2D& InSize, const FSlateCatenary
 
 void FCatenaryBuilder::BuildCatenaryPoints(FCatenaryArguments InArgs, TArray<FVector2D>& InCatenaryPoints)
 {
+	// Math based on: https://www.alanzucconi.com/2020/12/13/catenary-2/
 	const FVector2D InStart = InArgs.P1ConnectionSchema.Point;
 	const FVector2D InEnd = InArgs.P2ConnectionSchema.Point;
 	const int Segments = InArgs.Segments;

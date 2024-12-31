@@ -65,7 +65,6 @@ FSlateCatenary UCatenaryWidget::GetCatenaryData() const
 
 void UCatenaryWidget::Tick(float DeltaTime)
 {
-	// UE_LOG(LogTemp, Warning, TEXT("UCatenaryWidget::Tick"))
 	if (LastFrameNumberWeTicked == GFrameCounter)
 	{
 		return;
@@ -76,9 +75,7 @@ void UCatenaryWidget::Tick(float DeltaTime)
 		FCatenaryArguments Arg = Catenaries[i];
 		FVector2D DesiredP1 = GetDesiredLocation(Arg.P1ConnectionSchema);
 		FVector2D DesiredP2 = GetDesiredLocation(Arg.P2ConnectionSchema);
-
-		// TODO: Right now this only ever updates when there is a difference in Desired and current points.
-		// We want to update if there are any differences such as length and segments.
+		
 		if (Arg.bIsDirty || !DesiredP1.Equals(Arg.P1ConnectionSchema.Point) || !DesiredP2.Equals(Arg.P2ConnectionSchema.Point))
 		{
 			Catenaries[i].P1ConnectionSchema.Point = DesiredP1;
