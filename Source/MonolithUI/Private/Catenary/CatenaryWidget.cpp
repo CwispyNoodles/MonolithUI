@@ -32,6 +32,32 @@ void UCatenaryWidget::ReleaseSlateResources(bool bReleaseChildren)
 	SlateCatenary.Reset();
 }
 
+void UCatenaryWidget::PostEditChangeChainProperty(FPropertyChangedChainEvent& PropertyChangedEvent)
+{
+	const FProperty* Property = PropertyChangedEvent.Property;
+	if (!Property)
+	{
+		return;
+	}
+	const FProperty* MemberProperty = PropertyChangedEvent.PropertyChain.GetActiveMemberNode()->GetValue();
+	if (!MemberProperty)
+	{
+		return;
+	}
+	
+	const FString MemberPropertyName = MemberProperty->GetName();
+	if (MemberPropertyName == TEXT("Catenaries"))
+	{
+		const int32 ArrayIndex = PropertyChangedEvent.GetArrayIndex(MemberPropertyName);
+		if (Catenaries.IsValidIndex(ArrayIndex))
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Catenary %s is now dirty"), *FString::FromInt(ArrayIndex))
+			Catenaries[ArrayIndex].bIsDirty = true;
+		}
+		
+	}
+}
+
 FSlateCatenary UCatenaryWidget::GetCatenaryData() const
 {
 	return FSlateCatenary(Catenaries, Cast<UWidgetTree>(GetOuter()));
@@ -39,10 +65,15 @@ FSlateCatenary UCatenaryWidget::GetCatenaryData() const
 
 void UCatenaryWidget::Tick(float DeltaTime)
 {
+	// UE_LOG(LogTemp, Warning, TEXT("UCatenaryWidget::Tick"))
 	if (LastFrameNumberWeTicked == GFrameCounter)
 	{
 		return;
 	}
+
+// #if WITH_EDITOR
+// 	GEditor->
+// #endif
 
 	for (int i = 0; i < Catenaries.Num(); i++)
 	{
@@ -52,14 +83,17 @@ void UCatenaryWidget::Tick(float DeltaTime)
 
 		// TODO: Right now this only ever updates when there is a difference in Desired and current points.
 		// We want to update if there are any differences such as length and segments.
-		if (!DesiredP1.Equals(Arg.P1ConnectionSchema.Point) || !DesiredP2.Equals(Arg.P2ConnectionSchema.Point))
+		if (Arg.bIsDirty || !DesiredP1.Equals(Arg.P1ConnectionSchema.Point) || !DesiredP2.Equals(Arg.P2ConnectionSchema.Point))
 		{
+			UE_LOG(LogTemp, Warning, TEXT("Updating Catenary %s"), *FString::FromInt(i))
 			Catenaries[i].P1ConnectionSchema.Point = DesiredP1;
 			Catenaries[i].P2ConnectionSchema.Point = DesiredP2;
 			
 			TArray<FVector2D> CatenaryPoints;
 			FCatenaryBuilder::BuildCatenaryPoints(Catenaries[i], CatenaryPoints);
 			Catenaries[i].CatenaryPoints = CatenaryPoints;
+
+			Catenaries[i].bIsDirty = false;
 		}
 	}
 

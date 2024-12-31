@@ -20,6 +20,7 @@ protected:
 	virtual TSharedRef<SWidget> RebuildWidget() override;
 	virtual void OnWidgetRebuilt() override;
 	virtual void ReleaseSlateResources(bool bReleaseChildren) override;
+	virtual void PostEditChangeChainProperty(FPropertyChangedChainEvent& PropertyChangedEvent) override;
 	
 #if WITH_EDITOR
 	virtual const FText GetPaletteCategory() override
@@ -42,14 +43,16 @@ public:
 	{
 		RETURN_QUICK_DECLARE_CYCLE_STAT(UCatenaryWidget, STATGROUP_Tickables);
 	}
-	virtual bool IsTickableWhenPaused() const
+	virtual bool IsTickableWhenPaused() const override
 	{
 		return true;
 	}
-	virtual bool IsTickableInEditor() const
+	virtual bool IsTickableInEditor() const override
 	{
 		return true;
 	}
+
+	
 	// FTickableGameObject End
 
 

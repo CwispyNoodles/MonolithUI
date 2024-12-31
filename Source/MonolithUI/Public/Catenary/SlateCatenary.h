@@ -79,6 +79,9 @@ struct MONOLITHUI_API FCatenaryArguments
 
 	UPROPERTY()
 	TArray<FVector2D> CatenaryPoints;
+
+	UPROPERTY()
+	bool bIsDirty = false;
 };
 
 /**
