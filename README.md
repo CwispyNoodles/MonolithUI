@@ -7,6 +7,7 @@ MonolithUI consists of various novel UI elements implemented in Unreal Engine us
 #### Implemented:
 * Catenary Widget
 #### To Do:
+* Dynamic Windows
 * Mesh/Actor Widgets
 * Particle Widget
 * Knob Widget
